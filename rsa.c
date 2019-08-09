@@ -7,13 +7,17 @@ int main()
     word r;
 
     init(&x);
-    remplir(&x, 10);
+    remplir(&x, 5);
+    remplir(&y, 4);
     // printf("%d\n", x.l);
     affiche(&x, "x");
-    copy(&x,&y);
+    // copy(&x,&y);
     affiche(&y, "y");
 
-    add(&r, &x, &y);
+    // add(&r, &x, &y);
+    // affiche(&r, "r");
+
+    sub(&r, &x, &y);
     affiche(&r, "r");
 
     return 0;
@@ -35,7 +39,8 @@ void remplir(word *x, int l)
 {
     int i;
     for (i = 0; i < l; ++i){
-        x->val[i] = 0xFF;//rand() % max;    /* max = uint8_t = 8 bits = de 0,1 ..., 255 = 256 choix */
+        //x->val[i] = 0xFF;//rand() % max;    /* Test of BoF */
+        x->val[i] = rand() % max;    /* max = uint8_t = 8 bits = de 0,1 ..., 255 = 256 choix */
     }
     x->l = l;
 }
@@ -69,25 +74,6 @@ void copy(word *cop, word *past)
 */
 void add(word *r, word *a, word *b)
 {
-
-    /* max retune est 1
-    - si (a->l >= b->l)? est vrais on attribue a->l à longeur, sinon c'est b->l.
-        equivalent à :
-        if (a->l >= b->l)
-            longeur = a->l;
-        else
-            longeur = b->l;
-    - on parcour tout les elements des word et on les additions.
-    -
-    - r->val[i] = a->val[i] + b->val[i] + retenue; equivalent à :
-        if ((a->val[i] + b->val[i] + retenue) > max){
-            retenue = 1;
-        }
-        else
-            retenue = 0;
-    -
-    */
-
     int longeur = (a->l >= b->l)? a->l:b->l;
     int i;
     int retenue = 0;
@@ -99,9 +85,46 @@ void add(word *r, word *a, word *b)
     r->l = (retenue)? longeur+1:longeur;
     if (r->l > size){
         printf("Error in function ADD : BOF of the table size.\n");
-        exit (-1); /* to do : customize error cods */
+        exit (1); /* to do : customize error cods */
     }
     /* We assigne the value to the result table only if there is n't a BOF */
     r->val[i] = retenue;
 
+}
+
+/*  sub() : substraction operation
+    - a must be bigger than b to do the substractio
+    - handle the rest of the substraction (on the i+1 operation)
+    - when ai < bi we use the max verialble (e.g 10, 0x100 in hex)
+        (max - bi)+ ai - rest
+*/
+int compare(word *a, word *b)
+{
+    int longeur = (a->l >= b->l)? a->l:b->l;
+
+    if (a->val[a->l] > b->val[b->l])
+        return 1;
+    else if (a->val[a->l] < b->val[b->l])
+        return -1;
+    else
+        return 0;
+}
+
+void sub(word *r, word *a, word *b)
+{
+    int i , rest;
+    rest = i = 0;
+
+    if (compare(a, b) == 1){
+        for (i; i < size; ++i){
+            if (a > b)
+                r->val[i] = a->val[i] - b->val[i] - rest;
+            else
+                r->val[i] = (max - b->val[i]) + a->val[i] - rest;  /* ri = (bi - max) +ai - rest */
+        }
+    }
+    else if(compare(a, b) == -1)
+        printf("Error in function SUB : a < b.\n");
+    else
+        printf("Error in function SUB : a = b.\n");
 }

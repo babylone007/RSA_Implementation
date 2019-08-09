@@ -1,5 +1,12 @@
 /* Header file for all include declaration of the original rsa.c program */
 
+/* Code Error
+    1 : in add(), r = a + b > size, the vector length is larger than the maximum
+        size specified by the global "size" variable.
+    2 :
+    3 :
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
@@ -18,28 +25,9 @@ struct _word{
 typedef struct _word word;       /* word = struct _word, "a short name" */
 
 void init(word *x);
-void affiche(word *x, char * nom);   /* char * : tableau de n char (n=*) */
-void remplir(word *x, int l);
-void copy(word *cop, word *past);     /* copy tab cop in tab past */
+void affiche(word *x, char * nom);      /* char * : tableau de n char (n=*) */
+void remplir(word *x, int l);           /* fel a word with value */
+void copy(word *cop, word *past);       /* copy tab cop in tab past */
 void add(word *r, word *a, word *b);    /* r = a + b */
-
-/*
-void addition(word *r, word *a, word *b)
-{
-    int i, ln, ret;
-    ret = 0;
-    ln = (a->l >= b->l)? a->l:b->l;
-
-    for (i = 0; i < ln; ++i){
-        r->val[i] = a->val[i] + b->val[i] + ret;
-        ret = ((a->val[i] + b->val[i] + ret) > max)? 1:0;
-    }
-
-    r->l = (ret)? ln+1:ln;
-    if (r->l > size){
-        printf("%s\n", "BOF");
-        exit(-1);
-    }
-    r->val[i] = ret;
-}
-*/
+int compare(word *a, word *b);          /* compare a to b */
+void sub(word *r, word *a, word *b);              /* r = a - b */
