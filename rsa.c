@@ -157,14 +157,15 @@ void sub(word *r, word *a, word *b)
     rest = i = 0;
 
     if (compare(a, b) == 1){
+        r->l = a->l;
         for (i; i < a->l; ++i){
             if (a->val[i] >= b->val[i]){
                 r->val[i] = a->val[i] - b->val[i] - rest;
-                printf("%d\t%d\n", i, r->val[i]);
+                rest = 0;
             }
             else if (a->val[i] < b->val[i]){
                 r->val[i] = (max - b->val[i]) + a->val[i] - rest;  /* ri = (bi - max) +ai - rest */
-                printf("%d\t%d\n", i, r->val[i]);
+                rest = 1;
             }
         }
     }
